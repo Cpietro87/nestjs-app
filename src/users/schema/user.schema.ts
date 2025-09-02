@@ -1,12 +1,29 @@
-import { Schema } from 'mongoose';
-import {  IsString, IsEmail, } from 'class-validator';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 
-export const UserSchema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-}, );
+export type UserDocument = User & Document;
+
+@Schema()
+export class User {
+    @Prop({ required: true })
+    name: string;
+
+    @Prop({ required: true, unique: true })
+    email: string;
+
+    @Prop({ required: true })
+    password: string;
+
+    @Prop({
+        required: true,
+        enum: ['admin', 'user', 'editor'], 
+        default: 'user',
+    })
+    role: string;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
 
 // Hook to hash password before saving
 UserSchema.pre('save', async function (next) {

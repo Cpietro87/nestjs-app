@@ -5,4 +5,5 @@ export interface User extends Document {
     name: string;
     email: string;
     password: string;
+    role: 'admin' | 'user' | 'editor';
 }
