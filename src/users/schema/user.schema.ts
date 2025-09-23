@@ -17,19 +17,23 @@ export class User {
 
     @Prop({
         required: true,
-        enum: ['admin', 'user', 'editor'], 
+        enum: ['admin', 'user', 'editor', 'Client'],
         default: 'user',
     })
     role: string;
 }
 
+// Extraemos la función de hash para testear
+export const hashPassword = async (password: string) => {
+    const saltRounds = 10;
+    return bcrypt.hash(password, saltRounds);
+};
+
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// Hook to hash password before saving
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password') || this.isNew) {
-        const saltRounds = 10;
-        this.password = await bcrypt.hash(this.password, saltRounds);
+        this.password = await hashPassword(this.password);
     }
     next();
 });

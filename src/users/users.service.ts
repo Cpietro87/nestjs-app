@@ -36,7 +36,8 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.userModel.findById(id).exec();
+
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -44,6 +45,6 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.userModel.findByIdAndDelete(id).exec();
   }
 }
